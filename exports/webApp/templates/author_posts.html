@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="mb-3">Posts by {{ author.name }} ({{ author_posts.total }})</h1>
+    {% for post in author_posts.items %}
+      {% if post.is_origin %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              {% if post.nested %}
+                <a class="mr-2" href="{{ url_for('author_posts', author_name=post.author) }}">{{ post.author }} shared post</a>
+              {% else %}
+                <a class="mr-2" href="{{ url_for('author_posts', author_name=post.author) }}">{{ post.author }}</a>
+              {% endif %}
+              <small class="text-muted">{{ post.date_posted }}</small>
+            </div>
+            {% if post.content %}
+              <p class="article-content">{{ post.content }}</p>
+            {% endif %}
+            {% for image in images %}
+              {% if image.post_id == post.id %}
+                <img src="data:image/jpeg;base64,{{image.data}}"/>
+              {% endif %}
+            {% endfor %}
+            {% for video in videos %}
+              {% if video.post_id == post.id %}
+                <video controls>                      
+                  <source type="video/mp4" src="data:video/mp4;base64,{{video.url}}">
+                </video>
+              {% endif %}
+            {% endfor %}
+            {% if post.nested %}
+              {% for nested_post in posts %}
+                {% if nested_post.id == post.nested %}
+                      <div class="article-metadata">
+                        <a class="mr-2">{{ nested_post.author }}</a>
+                        <small class="text-muted">{{ nested_post.date_posted }}</small>
+                      </div>
+                      {% if nested_post.content %}
+                        <p class="article-content">{{ nested_post.content }}</p>
+                      {% endif %}
+                      {% for image in images %}
+                        {% if image.post_id == nested_post.id %}
+                          <img src="data:image/jpeg;base64,{{image.data}}"/>
+                        {% endif %}
+                      {% endfor %}
+                      {% for video in videos %}
+                        {% if video.post_id == nested_post.id %}
+                          <video controls>                      
+                            <source type="video/mp4" src="data:video/mp4;base64,{{video.url}}">
+                          </video>
+                        {% endif %}
+                      {% endfor %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        </article>
+      {% endif %}
+    {% endfor %}
+    {% for page_num in author_posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+      {% if author_posts.page == page_num %}
+        <a class="btn btn-info mb-4" href="{{ url_for('author_posts', author_name=author.name, page=page_num) }}">{{ page_num }}</a>
+      {% else %}
+        <a class="btn btn-outline-info mb-4" href="{{ url_for('author_posts', author_name=author.name, page=page_num) }}">{{ page_num }}</a>
+      {% endif %}
+    {% else %}
+      ...
+    {% endif %}
+  {% endfor %}
+{% endblock content %}
