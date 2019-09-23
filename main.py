@@ -12,12 +12,13 @@ from imports.vk_import import VKImport
 
 from exports.stupid_html_export import StupidHtmlExport
 from storage.inmemory_storage import InmemoryStorage
+from storage.database_storage import DatabaseStorage
 
-from exports.webApp import app
+#from exports.webApp import app
 
-if __name__ == '__main__':
-    #app.run(debug=True).start()
-    threading.Thread(target=app.run).start()
+# if __name__ == '__main__':
+#     #app.run(debug=True).start()
+#     threading.Thread(target=app.run).start()
 
 
 def inspect_element(r):
@@ -32,14 +33,15 @@ def inspect_element(r):
 
 imports = [VKImport('190868')]
 exports = [StupidHtmlExport("export.html")]
-storage = InmemoryStorage()
+#storage = InmemoryStorage()
+storage  = DatabaseStorage()
 
 while True:
     for i in imports:
         result = i.get_elements(5)
 
         for r in result:
-            inspect_element(r)
+            #inspect_element(r)
             print()
             storage.add_element(i.get_key(), r)
 
