@@ -14,11 +14,11 @@ from exports.stupid_html_export import StupidHtmlExport
 from storage.inmemory_storage import InmemoryStorage
 from storage.database_storage import DatabaseStorage
 
-#from exports.webApp import app
+from exports.webApp import app
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 #     #app.run(debug=True).start()
-#     threading.Thread(target=app.run).start()
+    threading.Thread(target=app.run).start()
 
 
 def inspect_element(r):
@@ -42,7 +42,7 @@ while True:
 
         for r in result:
             #inspect_element(r)
-            print()
+            #print()
             storage.add_element(i.get_key(), r)
 
             # TODO: add check for duplicated items somewhere (most likely as filter request to storage)
